@@ -1,8 +1,42 @@
 'use strict';
 
-////////////////////////////////////////////////
-//130. How to passing arguments? Values vs reference
+/////////////////////////////////////////////////////
+//131. First class and higher order functions
 
+//First class functions
+
+/*
+  -JS treats functions as first-class citizens
+  -Functions are just values
+  -Functions are just another type of object
+
+
+  With function we can:
+  -Store functions in variables or properties
+  -pass functions as arguments of other functions
+  -Return functions from functions
+  -Call methods on functions
+
+*/
+
+//Higher order functions
+
+/*
+1. Is a funtions that RECEIVES a function as an argument,
+that returns a new functions or BOTH
+
+Example: 
+          const greet = () => console.log('Hey Jonas');
+          btnClose addEventListener ('click', greet); //greet is the callback function (functions pass as a argument)
+
+
+This is only possible because of first class functions
+
+*/
+
+/////////////////////////////////////////////////////
+//130. How to passing arguments? Values vs reference
+/*
 const flight = 'LH234';
 const christian = {
   name: 'Christian Tilano',
@@ -34,6 +68,7 @@ const newPassport = function (person) {
 
 newPassport(christian);
 checkIn(flight, christian);
+*/
 
 ////////////////////////////////////////////////
 //129. Default parameters
