@@ -1,8 +1,64 @@
 'use strict';
 
 /////////////////////////////////////////////////////
-//133. Functions returning functions
+//134. The call and apply methods
 
+const luthansa = {
+  name: 'Luthansa',
+  iataCode: 'LH',
+  bookings: [],
+  //book = function(){}  //old syntax
+  book(flightNum, name) {
+    console.log(
+      `${name} booked a flight on fligh ${this.iataCode} ${flightNum}`
+    );
+    this.bookings.push({ Flight: `${this.iataCode} ${flightNum}`, name });
+  },
+};
+
+luthansa.book(65456, 'Christian Tilano');
+
+const eurowings = {
+  name: 'Eurowings',
+  iataCode: 'EW',
+  bookings: [],
+};
+
+const book = luthansa.book; //copy of luthansa book method --> but know is just a function
+
+book.call(eurowings, 23, 'Sara Martinez'); //.call() is a method that functions had
+
+console.log(eurowings);
+
+book.call(luthansa, 299, 'Pedro Perez');
+console.log(luthansa);
+
+//Creating a new object
+const swiss = {
+  name: 'Swiss Air Lines',
+  iataCode: 'LX',
+  bookings: [],
+}
+
+book.call(swiss, 547, 'Mary Cooper');
+
+
+//Apply method --> receives an array intead of properties
+//Note: it's not that used in modern Js 
+const flightData = [583, 'George Gonzales'];
+book.apply(swiss, flightData);
+console.log(swiss);
+
+//intead of apply we use .CALL()
+book.call(swiss, ...flightData);
+
+
+
+
+
+/////////////////////////////////////////////////////
+//133. Functions returning functions
+/*
 const greet = function (greeting) {
   return function (name) {
     console.log(`${greeting} ${name}`);
@@ -30,6 +86,7 @@ const greetArr = greetingArr => nameArr =>
   console.log(`${greetingArr} ${nameArr}`); //Arrow functions of 1 line dont need paratheses and return expression
 
 greetArr('Hola')('Pedro');
+*/
 
 /////////////////////////////////////////////////////
 //132. Functions accepting callback functions
