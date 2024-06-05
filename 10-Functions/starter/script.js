@@ -1,8 +1,90 @@
 'use strict';
 
 /////////////////////////////////////////////////////
-//134. The call and apply methods
+//135. The bind method
 
+/*
+    Allow us to manually set the this keyword, the difference is that
+    bind does not call the function inmediatly, instead it returns a
+    NEW FUNCTION where the this keyword is bound.
+*/
+
+const luthansa = {
+  name: 'Luthansa',
+  iataCode: 'LH',
+  bookings: [],
+  //book = function(){}  //old syntax
+  book(flightNum, name) {
+    console.log(
+      `${name} booked a flight on fligh ${this.iataCode} ${flightNum}`
+    );
+    this.bookings.push({ Flight: `${this.iataCode} ${flightNum}`, name });
+  },
+};
+
+const book = luthansa.book;
+
+const eurowings = {
+  name: 'Eurowings',
+  iataCode: 'EW',
+  bookings: [],
+};
+
+//book.call(eurowings, 23, 'Sara Martinez'); //.call() is a method that functions had
+
+const bookEW = book.bind(eurowings); //creates a new function with the this keyword assign to eurowings
+const bookLH = book.bind(luthansa);
+
+bookEW(23, 'Steven Williams');
+
+//Using PARTIAL APPLICATION --> when a part of the argument of the original function are already set
+const bookEW23 = book.bind(eurowings, 23);
+bookEW23('Pedro Perez');
+
+//With event listeners
+luthansa.planes = 300;
+luthansa.buyPlane = function () {
+  console.log(this);
+  this.planes++;
+  console.log(this.planes);
+};
+//Calling the function when making click on the button <buy plane>
+document.querySelector('.buy').addEventListener('click', luthansa.buyPlane.bind(luthansa));
+//Note: in an event listener the this keyword always points to the element in which it's attached
+
+//Partial application
+
+const addTax = (rate, value) => value + value * rate;
+console.log(addTax(0.1, 200));
+
+const addVAT = addTax.bind(null, 0.23);
+//addTax = value => value + value * 0.23;
+
+console.log(addVAT(100));
+console.log(addVAT(23));
+
+
+//Using other method - returning a function
+const addTaxRate = function(rate){
+  return function(value){
+    return value + value * rate;
+  }
+}
+
+const addVAT2 = addTaxRate(0.23);
+console.log(addVAT2(100));
+console.log(addVAT2(23));
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////
+//134. The call and apply methods
+/*
 const luthansa = {
   name: 'Luthansa',
   iataCode: 'LH',
@@ -51,10 +133,7 @@ console.log(swiss);
 
 //intead of apply we use .CALL()
 book.call(swiss, ...flightData);
-
-
-
-
+*/
 
 /////////////////////////////////////////////////////
 //133. Functions returning functions
