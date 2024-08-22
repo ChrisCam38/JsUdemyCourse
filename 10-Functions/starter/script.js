@@ -1,6 +1,39 @@
 'use strict';
 
 /////////////////////////////////////////////////////
+//137. Immediately Invoked Function Expression (IIFE)
+
+/* 
+    Functions that is only execute once, and desapear after used
+*/
+
+//Normal function:
+const runOonce = function (){
+  console.log('This will never run again');
+
+}
+runOonce(); //calling the functions
+
+//IIFE
+
+(function(){  //Grapping the function into parentheses
+  console.log('This will never run again');
+})();  //adding () at the end to invoke the function
+
+//IIFE arrow function
+
+(()=>console.log('This also will never run again'))();
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////
+//136. CODING CHALLENGE
+
+/////////////////////////////////////////////////////
 //135. The bind method
 
 /*
@@ -8,7 +41,7 @@
     bind does not call the function inmediatly, instead it returns a
     NEW FUNCTION where the this keyword is bound.
 */
-
+/*
 const luthansa = {
   name: 'Luthansa',
   iataCode: 'LH',
@@ -74,13 +107,7 @@ const addTaxRate = function(rate){
 const addVAT2 = addTaxRate(0.23);
 console.log(addVAT2(100));
 console.log(addVAT2(23));
-
-
-
-
-
-
-
+*/
 
 /////////////////////////////////////////////////////
 //134. The call and apply methods
@@ -106,7 +133,7 @@ const eurowings = {
   bookings: [],
 };
 
-const book = luthansa.book; //copy of luthansa book method --> but know is just a function
+const book = luthansa.book; //copy of luthansa book method --> but know is just a function --> in a regular function the this keyword poitns to undeffined
 
 book.call(eurowings, 23, 'Sara Martinez'); //.call() is a method that functions had
 
@@ -179,18 +206,18 @@ const upperFirstWord = function (str) {
   return [first.toUpperCase(), ...others].join(' ');
 };
 
-//Higher-order function
 
-const transformer = function (str, fn) {
+
+const transformer = function (str, fn) { //Higher-order function
   console.log(`Original string: ${str}`);
   console.log(`Transformed string: ${fn(str)}`);
 
   console.log(`Transformed by: ${fn.name}`);
 };
 
-transformer('JavaScript is the best', upperFirstWord);
+transformer('JavaScript is the best', upperFirstWord); //Calling the fn with upperFirstWord as parameter
 
-transformer('JavaScript is the best', oneWord);
+transformer('JavaScript is the best', oneWord); //Calling the fn with other functions as parameter
 
 //Other example
 const high5 = function () {
@@ -212,6 +239,9 @@ document.body.addEventListener('click', high5);
 
 //First class functions
 
+//What is a first class  function: is just a concept
+//Means that in a programming language functions are treated as values
+
 /*
   -JS treats functions as first-class citizens
   -Functions are just values
@@ -226,23 +256,34 @@ document.body.addEventListener('click', high5);
 
 */
 
-//Higher order functions
+//Higher order functions --> Function that receives or return a function
 
 /*
-1. Is a funtions that RECEIVES a function as an argument,
-that returns a new functions or BOTH
+//1. Is a funtions that RECEIVES a function as an argument,
+//that returns a new functions or BOTH
 
-Example: 
-          const greet = () => console.log('Hey Jonas');
-          btnClose addEventListener ('click', greet); //greet is the callback function (functions pass as a argument)
+      //Example: 
+                const greet = () => console.log('Hey Jonas');
+                btnClose addEventListener ('click', greet); //greet is the callback function (functions pass as a argument)
 
 
-This is only possible because of first class functions
+      //This is only possible because of first class functions
+
+//2. Fuction that returns new function
+
+    //Expample:
+    function count() { //count is the higher order function
+      let counter = 0;
+      return function(){ //this is the returned function
+        counter ++;
+      };
+    }
+
 
 */
 
 /////////////////////////////////////////////////////
-//130. How to passing arguments? Values vs reference
+//130. How passing arguments works? Values vs reference
 /*
 const flight = 'LH234';
 const christian = {
@@ -280,7 +321,7 @@ checkIn(flight, christian);
 ////////////////////////////////////////////////
 //129. Default parameters
 /*
-const bookings = [];
+const bookings = []; //Array with all bookings
 
 const createBooking = function (
   //ES6 - assighning a value directly
@@ -304,4 +345,6 @@ const createBooking = function (
 createBooking('LH123'); // print the default values assignet
 createBooking('LH123', 2, 800);
 createBooking('LH123', undefined, 800); //skipping a default parameter
+
+console.log(bookings); // Printing the array with all the objects
 */
