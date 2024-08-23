@@ -1,12 +1,45 @@
 'use strict';
 
 /////////////////////////////////////////////////////
+//138. Closures
+
+/*
+  A function has access to the variable environment (VE) of the execution context in which it was created
+
+  Clousure: VE attached to the function, exactly as it was at the time and place the function was created
+*/
+
+const secureBooking = function () {
+  let passengerCount = 0;
+
+  return function () {
+    passengerCount++;
+    console.log(`${passengerCount} passengers`);
+  };
+};
+
+const booker = secureBooking();
+
+//The booker function is in the global scope
+//But this function born by calling secureBooking(), and thats
+//why booker function has access or remenber the passengerCount variable
+//because, a function remembers the variables were the function born
+
+booker();
+booker();
+booker();
+
+/*
+  A clouse gives a functions access to all variables of its parents function, even after that parent function has returned. The functions keeps a reference to its outer scope, which preserves the scope chain, trhought time.
+*/
+
+/////////////////////////////////////////////////////
 //137. Immediately Invoked Function Expression (IIFE)
 
 /* 
     Functions that is only execute once, and desapear after used
 */
-
+/*
 //Normal function:
 const runOonce = function (){
   console.log('This will never run again');
@@ -23,12 +56,7 @@ runOonce(); //calling the functions
 //IIFE arrow function
 
 (()=>console.log('This also will never run again'))();
-
-
-
-
-
-
+*/
 
 /////////////////////////////////////////////////////
 //136. CODING CHALLENGE
