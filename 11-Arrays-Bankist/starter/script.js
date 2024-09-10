@@ -92,7 +92,46 @@ const currencies = new Map([
   ['GBP', 'Pound sterling'],
 ]);
 */
-//const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+
+/////////////////////////////////////////////////
+//151. The map method
+//Is another way to loop through an array, returns a new array
+
+
+const euroToUsd = 1.1;
+//Using arrow functions
+const movementsUSD = movements.map((mov)=> mov * euroToUsd
+  //function(mov){
+  //return mov * euroToUsd;
+)
+
+//With traditional functions
+//const movementsUSD = movements.map(function(mov){
+  //return mov * euroToUsd;
+//})
+
+console.log(movements);
+console.log(movementsUSD);
+
+const movementUSDfor = [];
+for(const mov of movements) movementUSDfor.push(mov * euroToUsd);
+console.log(movementUSDfor);
+
+//With maps we have access to the same three parameter as in the foreach
+const movementsDescriptions = movements.maps((mov, i, arr) => {
+  if (mov > 0) {
+    return `Movement ${i + 1}: You made a deposit of ${mov}`;
+  } else {
+    return `Movement ${i + 1}: You withdrawn ${Math.abs(mov)}`; //Math.abs() removes the sign of a number
+  }
+}
+
+console.log(movementsDescriptions);
+
+
+
 
 /////////////////////////////////////////////////
 //150. Data transformations: map, filter, reduce
@@ -108,22 +147,6 @@ a specified test condition */
 //REDUCE
 
 /*Reduce all the elements of an array into one element (eg: adding all the elements in the array) */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -147,7 +170,7 @@ TEST DATA 2: Julia's data [9, 16, 6, 8, 3], Kate's data [10, 5, 6, 1, 4]
 
 GOOD LUCK 😀
 */
-
+/*
 let dogsJulia = [3, 5, 2, 12, 7];
 let dogsKate = [4, 1, 15, 8, 3];
 
@@ -166,7 +189,7 @@ const checkDogs = function (dogsJulia, dogsKate) {
 };
 
 checkDogs(dogsJulia, dogsKate);
-
+*/
 /////////////////////////////////////////////////
 //146. forEach with maps and sets
 /*
