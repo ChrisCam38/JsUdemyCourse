@@ -94,15 +94,65 @@ const currencies = new Map([
 */
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
+/////////////////////////////////////////////////
+//153. The filter method
+
+//Is use for filter elements that satisfied a certain condition
+
+const deposits = movements.filter(function(mov){
+  return mov > 0; //Movements returns a boolean value -> the true values will be include it
+})
+
+console.log(deposits);
+
+//Doing the same with a for of loop
+
+let depositsFor = [];
+for (const mov of movements) if (mov > 0){
+  depositsFor.push(mov);
+} 
+
+console.log(depositsFor);
+
+const withdrawals = movements.filter(function(mov){
+  return mov < 0;
+})
+
+console.log(withdrawals);
+
+
+
+
+/////////////////////////////////////////////////
+//152. The map method
+/*
+const createUserNames = function (accs) {
+  //receives an array with accounts
+  //Remember: For each mutates the data from an array -> in this case, the accounts array
+  accs.forEach(function (accs) {
+    accs.userName = accs.owner
+      .toLocaleLowerCase()
+      .split(' ')
+      .map(name => name.substring(0, 1))
+      .join('');
+  });
+};
+
+const user = 'Steven Thomas Williams';
+//splits creates an array with names -> .map to iterate throught each name -> returning the first letter of each name -> joining the values in a single string
+
+createUserNames(accounts);
+console.log(accounts);
 
 /////////////////////////////////////////////////
 //151. The map method
 //Is another way to loop through an array, returns a new array
-
+/*
 
 const euroToUsd = 1.1;
 //Using arrow functions
 const movementsUSD = movements.map((mov)=> mov * euroToUsd
+  //is an arrow function with one line, the return keyword is not need it
   //function(mov){
   //return mov * euroToUsd;
 )
@@ -130,8 +180,7 @@ const movementsDescriptions = movements.maps((mov, i, arr) => {
 
 console.log(movementsDescriptions);
 
-
-
+*/
 
 /////////////////////////////////////////////////
 //150. Data transformations: map, filter, reduce
@@ -147,8 +196,6 @@ a specified test condition */
 //REDUCE
 
 /*Reduce all the elements of an array into one element (eg: adding all the elements in the array) */
-
-
 
 ///////////////////////////////////////
 // 149. Coding Challenge #1
