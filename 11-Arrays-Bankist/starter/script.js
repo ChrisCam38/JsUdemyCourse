@@ -82,6 +82,12 @@ const displayMovements = function (movements) {
 
 displayMovements(account1.movements);
 
+const calcDisplayMovements = function(movements){
+  const balance = movements.reduce((acc, mov) => acc + mov, 0);
+  labelBalance.textContent = `${balance} EUR`
+}
+
+calcDisplayMovements(account1.movements)
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -95,8 +101,47 @@ const currencies = new Map([
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
-//153. The filter method
+//154. The reduce method
 
+console.log(movements);
+//Using normal fucntions
+
+//const balance = movements.reduce(function(acc, curr, i, arr){ //in the reduce method the first parameter is called "accumulator"
+//  console.log(`Iteration: ${i} accumulator is: ${acc}`);
+//  return acc + curr;
+//}, 0);
+
+//Using arrow functions
+
+const balance = movements.reduce((acc, mov) => acc + mov);
+
+console.log(balance);
+
+//With a for of loop
+let balance2 = 0;
+for(const mov of movements) balance2 += mov;
+
+console.log(balance2);
+
+//Maximum value of an array
+const maxValue = movements.reduce(function(max, curr){
+  if (max > curr)
+    return max;
+  
+  else 
+   return curr;
+
+}, movements[0]) //always use the position [0] in the array to find the maximum or the minimum value in an array
+
+console.log(maxValue);;
+
+
+
+
+
+/////////////////////////////////////////////////
+//153. The filter method
+/*
 //Is use for filter elements that satisfied a certain condition
 
 const deposits = movements.filter(function(mov){
@@ -120,7 +165,7 @@ const withdrawals = movements.filter(function(mov){
 
 console.log(withdrawals);
 
-
+*/
 
 
 /////////////////////////////////////////////////
