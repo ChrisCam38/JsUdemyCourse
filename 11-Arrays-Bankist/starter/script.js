@@ -125,7 +125,46 @@ const currencies = new Map([
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
+//158. The find method
+//Find returns an element  -- the filter method returns an array
+const firstWithdrawal = movements.find(mov => mov < 0); //Returns the first withdrawal
+console.log(movements);
+console.log(firstWithdrawal);
+
+//Array with accounts
+console.log(accounts);
+
+//Finding one account user
+const account = accounts.find(acc => acc.owner === 'Jessica Davis');
+console.log(account); //Retrieves an object
+
+/////////////////////////////////////////////////
+//157. Coding Challenge #3
+
+/* 
+Rewrite the 'calcAverageHumanAge' function from the previous challenge, but this time as an arrow function, and using chaining!
+
+TEST DATA 1: [5, 2, 4, 1, 15, 8, 3]
+TEST DATA 2: [16, 6, 10, 5, 6, 1, 4]
+
+GOOD LUCK 😀
+*/
+/*
+const ages1 = [5, 2, 4, 1, 15, 8, 3];
+const ages2 = [16, 6, 10, 5, 6, 1, 4];
+
+const calcAverageHumanAge = ages =>
+  ages
+    .map(dogAge => (dogAge <= 2 ? 2 * dogAge : 16 + dogAge * 4))
+    .filter(age => age >= 18)
+    .reduce((acc, age, i, arr) => acc + age / arr.length, 0);
+
+console.log(calcAverageHumanAge(ages1));
+console.log(calcAverageHumanAge(ages2));
+*/
+/////////////////////////////////////////////////
 //156. The magic of chaining methods
+/*
 const euroToUsd = 1.1;
 const result = movements
   .filter(mov => mov > 0)
@@ -133,7 +172,7 @@ const result = movements
   .reduce((acc, mov) => acc + mov, 0);
 
 console.log(result);
-
+*/
 /////////////////////////////////////////////////
 //155. Coding Challenge #2
 
