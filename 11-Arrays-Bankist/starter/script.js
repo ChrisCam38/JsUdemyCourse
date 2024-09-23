@@ -80,21 +80,25 @@ const displayMovements = function (movements) {
   });
 };
 
-displayMovements(account1.movements);
 
-const CalcDisplaySummary = function (movements) {
+
+const CalcDisplaySummary = function (acc) {
   //Calculated the income of the account
-  const incomes = movements
+  const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov);
   labelSumIn.textContent = `${incomes}€`;
+
   //Calculated outcomes of bank
-  const out = movements.filter(mov => mov < 0).reduce((acc, mov) => acc + mov);
+  const out = acc.movements
+    .filter(mov => mov < 0)
+    .reduce((acc, mov) => acc + mov);
   labelSumOut.textContent = `${Math.abs(out)}€`; //Math.abs() -> removes the sign
+
   //Calculted interest
-  const interest = movements
+  const interest = acc.movements
     .filter(mov => mov > 0)
-    .map(deposit => (deposit * 1.2) / 100)
+    .map(deposit => (deposit * acc.interestRate) / 100)
     .filter((intr, i, arr) => {
       return intr >= 1;
       console.log(arr);
@@ -104,15 +108,59 @@ const CalcDisplaySummary = function (movements) {
   labelSumInterest.textContent = interest;
 };
 
-CalcDisplaySummary(account1.movements);
 
-const calcDisplayMovements = function (movements) {
+
+const calcDisplayBalance = function (movements) {
   const balance = movements.reduce((acc, mov) => acc + mov, 0);
   labelBalance.textContent = `${balance} €`;
 };
 
-calcDisplayMovements(account1.movements);
-/////////////////////////////////////////////////
+
+
+const createUserNames = function (accs) {
+  //receives an array with accounts
+  //Remember: For each mutates the data from an array -> in this case, the accounts array
+  accs.forEach(function (accs) {
+    accs.userName = accs.owner
+      .toLocaleLowerCase()
+      .split(' ')
+      .map(name => name.substring(0, 1))
+      .join('');
+  });
+};
+
+createUserNames(accounts);
+
+let currentAccount;
+
+btnLogin.addEventListener('click', function (e) {
+  //Prevent form from submitting
+  e.preventDefault();
+
+  currentAccount = accounts.find(
+    acc => acc.userName === inputLoginUsername.value
+  );
+  console.log(currentAccount);
+
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    //Display UI and message
+    labelWelcome.textContent = `Welcome back, ${currentAccount.owner.split(' ')[0]}`
+  };
+
+  containerApp.style.opacity = 100;
+
+  //Clear input fields
+  inputLoginUsername.value = inputLoginPin.value = '';
+  inputLoginPin.blur();
+
+    //Display movements
+    displayMovements(currentAccount.movements);
+    //Display balace
+    calcDisplayBalance(currentAccount.movements);
+    //Display summary
+    CalcDisplaySummary(currentAccount);
+});
+
 /////////////////////////////////////////////////
 // LECTURES
 /*
@@ -127,6 +175,7 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 /////////////////////////////////////////////////
 //158. The find method
 //Find returns an element  -- the filter method returns an array
+/*
 const firstWithdrawal = movements.find(mov => mov < 0); //Returns the first withdrawal
 console.log(movements);
 console.log(firstWithdrawal);
@@ -137,7 +186,7 @@ console.log(accounts);
 //Finding one account user
 const account = accounts.find(acc => acc.owner === 'Jessica Davis');
 console.log(account); //Retrieves an object
-
+*/
 /////////////////////////////////////////////////
 //157. Coding Challenge #3
 
