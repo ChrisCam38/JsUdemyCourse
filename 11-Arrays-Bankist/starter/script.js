@@ -185,14 +185,31 @@ btnTransfer.addEventListener('click', function (e) {
   }
 });
 
-//Close functionality
-btnClose.addEventListener('click', function(e){
+btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
-  
 
-  if(currentAccount.userName === inputCloseUsername.value && Number(inputClosePin.value) === currentAccount.pin){
-    
-    const index = accounts.findIndex(acc => acc.userName === currentAccount.userName)
+  const amount = Number(inputLoanAmount.value);
+  //every movement needs to be greater or equal of 10% of the amount
+  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    currentAccount.movements.push(amount);
+
+    updateUI(currentAccount);
+
+    inputLoanAmount.value = '';
+  }
+});
+
+//Close functionality
+btnClose.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  if (
+    currentAccount.userName === inputCloseUsername.value &&
+    Number(inputClosePin.value) === currentAccount.pin
+  ) {
+    const index = accounts.findIndex(
+      acc => acc.userName === currentAccount.userName
+    );
     console.log(index);
 
     //Delete the account
@@ -200,15 +217,10 @@ btnClose.addEventListener('click', function(e){
 
     //Hide the UI
     containerApp.style.opacity = 0;
-
   }
 
   inputCloseUsername.value = inputClosePin.value = '';
-})
-
-
-
-
+});
 
 /////////////////////////////////////////////////
 // LECTURES
@@ -220,6 +232,27 @@ const currencies = new Map([
 ]);
 */
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+/////////////////////////////////////////////////
+//162. Some and every
+
+console.log(movements);
+//Verifies if a specific value exists in an array - Checks  for EQUALITY
+console.log(movements.includes(70));
+//Checks a condition
+
+const anyDeposits = movements.some(mov => mov > 0);
+console.log(anyDeposits); //Returns true
+
+//EVERY
+//Checks if all the elements in an array are positives
+console.log(account4.movements.every(mov => mov > 0));
+
+//Separate callback
+const deposit = mov => mov > 0; //The condition
+//Same condition, different methods
+console.log(movements.every(deposit));
+console.log(movements.some(deposit));
 
 /////////////////////////////////////////////////
 //158. The find method
