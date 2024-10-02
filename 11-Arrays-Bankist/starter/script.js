@@ -234,8 +234,41 @@ const currencies = new Map([
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
-//162. Some and every
+//163. flat and flatMap
 
+const arr = [1, [2, 3, 4], 5, [6, 7], 8]; //array that contains arrays
+console.log(arr.flat()); //Turning all into a big array
+
+const arrDep = [1, [2, [3, 4], 8], 5, [6, 7], 8, [9, [10, 11], 13], 15];
+console.log(arrDep.flat(2));
+
+/*
+const accountMovements = accounts.map(acc => acc.movements);
+console.log(accountMovements); // Array with all movements in each account
+
+const allMovements = accountMovements.flat();
+console.log(allMovements);
+
+const totalBalance = allMovements.reduce((acc, mov) => acc + mov, 0);
+console.log(totalBalance);
+*/
+//The same of above but more consice
+//flat
+const accountMovements = accounts
+  .map(acc => acc.movements)
+  .flat()
+  .reduce((acc, mov) => acc + mov, 0);
+console.log(accountMovements);
+
+//flatMap -> method that combines flat and map
+const accountMovements2 = accounts
+  .flatMap(acc => acc.movements) //Only goes one level deep it cant be change it
+  .reduce((acc, mov) => acc + mov, 0);
+console.log(accountMovements);
+
+/////////////////////////////////////////////////
+//162. Some and every
+/*
 console.log(movements);
 //Verifies if a specific value exists in an array - Checks  for EQUALITY
 console.log(movements.includes(70));
@@ -253,7 +286,7 @@ const deposit = mov => mov > 0; //The condition
 //Same condition, different methods
 console.log(movements.every(deposit));
 console.log(movements.some(deposit));
-
+*/
 /////////////////////////////////////////////////
 //158. The find method
 //Find returns an element  -- the filter method returns an array
