@@ -62,10 +62,11 @@ const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
 //Receives an array of movements and displays that data
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
   containerMovements.innerHTML = '';
 
-  movements.forEach(function (mov, i) {
+  const movs = sort ? movements.slice().sort((a, b) => a- b) : movements;
+  movs.forEach(function (mov, i) {
     //Using a ternary operator to identify wheter is a deposit or withdrawal
     const type = mov > 0 ? 'deposit' : 'withdrawal';
     const html = `
@@ -222,6 +223,15 @@ btnClose.addEventListener('click', function (e) {
   inputCloseUsername.value = inputClosePin.value = '';
 });
 
+let sorted = false;
+btnSort.addEventListener('click', function(e){
+  e.preventDefault();
+  displayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted;
+})
+
+
+
 /////////////////////////////////////////////////
 // LECTURES
 /*
@@ -233,15 +243,54 @@ const currencies = new Map([
 */
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
+
+/////////////////////////////////////////////////
+//164. Sorting arrays
+
+//IMPORTANT: the sort method mutates the array
+//Strings
+const owners = ['Juan', 'Pedro', 'Camilo', 'Esteban', 'Miguel'];
+console.log(owners.sort());
+console.log(owners);
+
+//Numbers
+console.log(movements);
+
+//Return < 0, A, B
+//Return > 0, B, A
+
+//Ascending
+
+// movements.sort((a, b)=> {
+//   if (a > b) return 1;
+//   if (b > a) return -1;
+// });
+// console.log(movements);
+
+//The same but more concise
+movements.sort((a, b) => a - b); 
+console.log(movements);
+//Descending
+// movements.sort((a, b) =>{
+//   if (a > b) return -1;
+//   if (b > a) return 1;
+// })
+//The same but more concise
+movements.sort((a, b) => b - a); 
+console.log(movements);
+
+
+
+
 /////////////////////////////////////////////////
 //163. flat and flatMap
-
+/*
 const arr = [1, [2, 3, 4], 5, [6, 7], 8]; //array that contains arrays
 console.log(arr.flat()); //Turning all into a big array
 
 const arrDep = [1, [2, [3, 4], 8], 5, [6, 7], 8, [9, [10, 11], 13], 15];
 console.log(arrDep.flat(2));
-
+*/
 /*
 const accountMovements = accounts.map(acc => acc.movements);
 console.log(accountMovements); // Array with all movements in each account
@@ -254,6 +303,7 @@ console.log(totalBalance);
 */
 //The same of above but more consice
 //flat
+/*
 const accountMovements = accounts
   .map(acc => acc.movements)
   .flat()
@@ -265,7 +315,7 @@ const accountMovements2 = accounts
   .flatMap(acc => acc.movements) //Only goes one level deep it cant be change it
   .reduce((acc, mov) => acc + mov, 0);
 console.log(accountMovements);
-
+*/
 /////////////////////////////////////////////////
 //162. Some and every
 /*
