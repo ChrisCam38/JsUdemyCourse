@@ -21,9 +21,9 @@ const account1 = {
     '2020-01-28T09:15:04.904Z',
     '2020-04-01T10:17:24.185Z',
     '2020-05-08T14:11:59.604Z',
-    '2020-05-27T17:01:17.194Z',
-    '2020-07-11T23:36:17.929Z',
-    '2020-07-12T10:51:36.790Z',
+    '2024-10-15T17:01:17.194Z',
+    '2024-10-16T23:36:17.929Z',
+    '2024-10-17T18:51:36.790Z',
   ],
   currency: 'EUR',
   locale: 'pt-PT', // de-DE
@@ -81,20 +81,55 @@ const inputClosePin = document.querySelector('.form__input--pin');
 /////////////////////////////////////////////////
 // Functions
 
-const displayMovements = function (movements, sort = false) {
+const formatMovementDate = function (date, locale) {
+  const calcDatesPassed = (date1, date2) =>
+    Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
+
+  const daysPassed = calcDatesPassed(new Date(), date);
+  if (daysPassed === 0) return `Today`;
+  if (daysPassed === 1) return `Yesterday`;
+  if (daysPassed <= 7) return `${daysPassed} days ago`;
+  else {
+    /*     const day = `${date.getDate()}`.padStart(2, 0);
+    const month = `${date.getMonth() + 1}`.padStart(2, 0);
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`; */
+    return Intl.DateTimeFormat(locale).format(date);
+  }
+};
+
+//Formamt currency function
+const formatCurrency = function (value, locale, currency) {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency,
+  }).format(value);
+};
+
+const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
 
-  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  const movs = sort
+    ? acc.movements.slice().sort((a, b) => a - b)
+    : acc.movements;
 
   movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
+
+    //Account dates array
+    const date = new Date(acc.movementsDates[i]);
+    const displayDate = formatMovementDate(date, acc.locale);
+
+    const formatMov = formatCurrency(mov, acc.locale, acc.currency);
 
     const html = `
       <div class="movements__row">
         <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div>
-        <div class="movements__value">${mov.toFixed(2)}€</div>
+        <div class="movements__dates">${displayDate}</div>
+        <div class="movements__value">${formatMov}</div>
       </div>
     `;
 
@@ -104,19 +139,24 @@ const displayMovements = function (movements, sort = false) {
 
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
+  const formatMov = formatCurrency(acc.balance, acc.locale, acc.currency);
+  labelBalance.textContent = formatMov;
 };
 
 const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${incomes.toFixed(2)}€`;
+  labelSumIn.textContent = formatCurrency(incomes, acc.locale, acc.currency);
 
   const out = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumOut.textContent = `${Math.abs(out).toFixed(2)}€`;
+  labelSumOut.textContent = formatCurrency(
+    Math.abs(out),
+    acc.locale,
+    acc.currency
+  );
 
   const interest = acc.movements
     .filter(mov => mov > 0)
@@ -126,7 +166,11 @@ const calcDisplaySummary = function (acc) {
       return int >= 1;
     })
     .reduce((acc, int) => acc + int, 0);
-  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
+  labelSumInterest.textContent = formatCurrency(
+    interest,
+    acc.locale,
+    acc.currency
+  );
 };
 
 const createUsernames = function (accs) {
@@ -142,7 +186,7 @@ createUsernames(accounts);
 
 const updateUI = function (acc) {
   // Display movements
-  displayMovements(acc.movements);
+  displayMovements(acc);
 
   // Display balance
   calcDisplayBalance(acc);
@@ -154,6 +198,33 @@ const updateUI = function (acc) {
 ///////////////////////////////////////
 // Event handlers
 let currentAccount;
+
+//FAKE LOGIN
+currentAccount = account1;
+updateUI(currentAccount);
+containerApp.style.opacity = 100;
+
+//Trying Dates internationalization
+const now = new Date();
+const options = {
+  hour: 'numeric',
+  minute: 'numeric',
+  day: 'numeric',
+  month: 'numeric',
+  year: 'numeric',
+  //weekday: 'long'
+};
+
+//Getting the location and language from user browsers
+const locale = navigator.language;
+console.log(locale);
+
+labelDate.textContent = new Intl.DateTimeFormat(
+  currentAccount.locale,
+  options
+).format(now);
+
+//Desire output date: day/month/Year
 
 btnLogin.addEventListener('click', function (e) {
   // Prevent form from submitting
@@ -170,6 +241,15 @@ btnLogin.addEventListener('click', function (e) {
       currentAccount.owner.split(' ')[0]
     }`;
     containerApp.style.opacity = 100;
+    //Create current date and time
+    const now = new Date();
+    const day = `${now.getDate()}`.padStart(2, 0); //padStart format the date: 1/2/2024 -> 01/02/2024 | We are saying max lenth, and pad with a cero (2, 0)
+    const month = `${now.getMonth() + 1}`.padStart(2, 0);
+    const year = now.getFullYear();
+    const hour = `${now.getHours()}`.padStart(2, 0);
+    const minutes = `${now.getMinutes()}`.padStart(2, 0);
+
+    labelDate.textContent = `${day}/${month}/${year}, ${hour}:${minutes}`;
 
     // Clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
@@ -182,7 +262,7 @@ btnLogin.addEventListener('click', function (e) {
 
 btnTransfer.addEventListener('click', function (e) {
   e.preventDefault();
-  const amount = Number.floor(inputTransferAmount.value);
+  const amount = Number(inputTransferAmount.value);
   const receiverAcc = accounts.find(
     acc => acc.username === inputTransferTo.value
   );
@@ -198,6 +278,10 @@ btnTransfer.addEventListener('click', function (e) {
     currentAccount.movements.push(-amount);
     receiverAcc.movements.push(amount);
 
+    //Add transfer date
+    currentAccount.movementsDates.push(new Date().toISOString());
+    receiverAcc.movementsDates.push(new Date().toISOString());
+
     // Update UI
     updateUI(currentAccount);
   }
@@ -209,11 +293,14 @@ btnLoan.addEventListener('click', function (e) {
   const amount = Number(inputLoanAmount.value);
 
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
-    // Add movement
+    setTimeout(function() {// Add movement
     currentAccount.movements.push(amount);
 
+    //Add loan date
+    currentAccount.movementsDates.push(new Date().toISOString());
+
     // Update UI
-    updateUI(currentAccount);
+    updateUI(currentAccount)}, 2500);
   }
   inputLoanAmount.value = '';
 });
@@ -251,10 +338,122 @@ btnSort.addEventListener('click', function (e) {
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
+/////////////////////////////////////////////////
+//181. setTimeOut and sethInterval
+
+//setTimeOut: used to execute some code at some point in the future
+//setTimeout (callback function, time in miliseconds)
+const ingrediants = ['onion', 'mushrooms'];
+const pizzaTimer = setTimeout(
+  (ing1, ing2) => console.log(`Here is your pizza of ${ing1} and ${ing2}`),
+  3000,
+  ...ingrediants
+);
+if (ingrediants.includes('onion')) clearTimeout(pizzaTimer);
+
+console.log('Waiting');
+
+//setInterval
+
+setInterval(function(){
+  const now = new Date();
+  const hours =now.getHours();
+  const minutes =now.getMinutes();
+  const seconds =now.getSeconds();
+  console.log(`The time is: ${hours}:${minutes}:${seconds.toString().padStart(2, '0')}`);
+
+}, 1000)
+
+/////////////////////////////////////////////////
+//180. Internazionalization Numbers (Int)
+
+const num = 302545.8;
+
+const options2 = {
+  style: 'currency',
+  unit: 'celsius',
+  currency: 'EUR',
+};
+
+console.log(
+  'USA Format: ',
+  new Intl.NumberFormat('en-US', options2).format(num)
+);
+console.log(
+  'Germany Format: ',
+  new Intl.NumberFormat('de-DE', options2).format(num)
+);
+console.log(
+  'USA Format: ',
+  new Intl.NumberFormat('ar-SY', options2).format(num)
+);
+console.log(
+  navigator.language,
+  new Intl.NumberFormat(navigator.language, options2).format(num)
+);
+
+/////////////////////////////////////////////////
+//179. Internazionalization API
+
+/////////////////////////////////////////////////
+//178. Operations with dates
+/*
+const future = new Date(2024, 10, 15, 8, 20);
+
+console.log(+future);
+console.log(Number(future)); //return timestamp
+
+
+
+const days1 = calcDatesPassed(new Date(2024, 10, 20), new Date(2024, 10, 15));
+console.log(days1);*/
+//Recommended library to work with dates: Moment.JS
+
+/////////////////////////////////////////////////
+//176. Creating Dates
+
+//Creating a date
+//There are 4 ways to creates dates in JS
+//All of them use the constructor function but can accept different parameters
+/*
+const now = new Date();
+console.log(now); //Output: current date
+
+console.log(new Date('Oct 11 2016 18:39:29'));
+console.log(new Date(account1.movementsDates[0]));
+
+console.log(new Date(2037, 10, 15, 8, 20, 15));
+
+console.log(new Date(2037, 10, 31)); //November only got 30 day --> Output: December 1
+
+console.log(new Date(0)); //Output: January 1 1970
+
+console.log(new Date(3 * 24 * 60 * 60 * 1000)); //Output: Sat Jan 03 1970 19:00:00 GMT-0500 (Colombia Standard Time) (three days later)
+
+//Working with dates
+const future = new Date(2024, 10, 15, 8, 20);
+console.log(future);
+
+console.log(future.getFullYear()); //Output: 2037 (never use .getYear())
+
+console.log(future.getMonth()); //Output: 10
+console.log(future.getDate()); //Output: 15
+console.log(future.getDay()); //Output: 5 -- Day of the month
+console.log(future.getHours()); //Output: 8
+console.log(future.getMinutes()); //Output: 20
+console.log(future.getSeconds()); //Output: 0
+console.log(future.toISOString()); //Output: 2024-11-15T13:20:00.000Z
+console.log(future.getTime()); //Output: 1731676800000 -> Amount of time that has happen since Jan 01 1970
+
+console.log(new Date(1731676800000));
+
+future.setFullYear(2040);
+console.log(future); //Output: Thu Nov 15 2040 08:20:00 GMT-0500 (Colombia Standard Time)
+*/
 
 /////////////////////////////////////////////////
 //175. Working with BigInt
-
+/*
 //In JS there is a maximum value for integer
 console.log(2 ** 53 - 1);
 console.log(Number.MAX_SAFE_INTEGER); //Is also stored in the Number object by default
@@ -285,7 +484,7 @@ console.log(huge + ' is really big');
 //Divisions
 console.log(11n / 3n); //Output: 3n
 console.log(10 / 3); //Output: 3.3333...
-
+*/
 /////////////////////////////////////////////////
 //174. Numeric separators
 /*
